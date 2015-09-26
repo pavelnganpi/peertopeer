@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base href="/">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PeerToPeer</title>
+    <!--<link rel="icon" type="image/png" href="favicon.png"/>-->
+    <!--<link href="stylesheets/style.css" rel="stylesheet">-->
+    <!-- Latest compiled and minified CSS -->
+    <link href="app/main/main.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/pnotify/pnotify.core.css">
+    <link rel="stylesheet" href="bower_components/pnotify/pnotify.buttons.css">
+
+
+</head>
+<body ng-app="PeerToPeerApp">
+
+<nav ng-controller="NavbarCtrl" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">
+                <span class="glyphicon glyphicon-film"></span>
+                <strong>PeerToPeer</strong></a>
+        </div>
+
+        <ul class="nav navbar-nav pull-right" ng-if="currentUser">
+            <li><a href="/transactions">Transactions</a></li>
+            <li><a href="javascript:void(0)" ng-click="logout()">Logout</a></li>
+        </ul>
+        <ul class="nav navbar-nav pull-right" ng-if="!currentUser">
+            <li><a href="/login">Login</a></li>
+            <li><a href="/signup">Sign up</a></li>
+            <li class="navbar-text" ng-bind="currentUser.email"></li>
+
+        </ul>
+    </div>
+</nav>
+
+<div ui-view=""></div>
+
+
+
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/pnotify/pnotify.core.js"></script>
+<script src="bower_components/pnotify/pnotify.confirm.js"></script>
+<script src="bower_components/pnotify/pnotify.buttons.js"></script>
+<script src="bower_components/angular-pnotify/src/angular-pnotify.js"></script>
+
+<script src="bower_components/angular-route/angular-route.min.js"></script>
+<script src="bower_components/angular-resource/angular-resource.min.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
+<script src="bower_components/angular-messages/angular-messages.min.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+
+<script>
+    var socket = io();
+</script>
+
+<script src="app.js"></script>
+<script src="app/repeatPassword.js"></script>
+<script src="app/auth.js"></script>
+<script src="app/services/socketio.service.js"></script>
+<script src="contants/auth.constants.js"></script>
+<script src="contants/main.constants.js"></script>
+<script src="contants/transaction.contants.js"></script>
+
+
+<script src="app/main/main.service.js"></script>
+<script src="app/main/main.controller.js"></script>
+
+<script src="app/login/login.service.js"></script>
+<script src="app/login/login.controller.js"></script>
+
+<script src="app/transactions/transaction.service.js"></script>
+<script src="app/transactions/transaction.controller.js"></script>
+
+<script src="app/navbar.controller.js"></script>
+<script src="app/signup/signup.controller.js"></script>
+
+
+<script src="app/http.service.js"></script>
+
+</body>
+</html>

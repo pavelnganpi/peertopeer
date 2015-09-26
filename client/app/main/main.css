@@ -1,0 +1,27 @@
+.main {
+    padding-top: 70px;
+}
+
+.bigicon {
+    font-size: 35px;
+    color: #36A0FF;
+}
+
+h2 {
+    text-align: center;
+    color: #03A9F4;
+}
+
+span {
+    color: #4CAF50;
+}
+
+/*style for jumbotron*/
+body > div > div > div > div:nth-child(2) {
+    background: transparent;
+    border: 1px solid #E91E63;
+}
+
+.go {
+    color: #03A9F4;
+}

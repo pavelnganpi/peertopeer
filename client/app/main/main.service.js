@@ -1,9 +1,9 @@
 angular.module('PeerToPeerApp')
-    .service('MainService', function ($q, HttpService) {
+    .service('MainService', function ($q, HttpService, MAIN_CONSTANTS) {
 
         this.getCurrentUser = function (userId) {
             var deferred = $q.defer();
-            HttpService.get('/main/users/' + userId)
+            HttpService.get(MAIN_CONSTANTS.URIS.GET_USER + userId)
                 .success(function (user) {
                     deferred.resolve(user);
                 }).catch(function () {
@@ -19,7 +19,7 @@ angular.module('PeerToPeerApp')
                 senderEmail: senderEmail,
                 cashAmount: cashAmount
             };
-            HttpService.post('/main/send', payload)
+            HttpService.post(MAIN_CONSTANTS.URIS.SEND_MONEY_BASE, payload)
                 .success(function () {
                     var result = {
                         type: 'success',
@@ -44,7 +44,7 @@ angular.module('PeerToPeerApp')
                 senderEmail: senderEmail,
                 cashAmount: cashAmount
             };
-            HttpService.post('/main/request', payload)
+            HttpService.post(MAIN_CONSTANTS.URIS.REQUEST_MONEY_BASE, payload)
                 .success(function () {
                     var result = {
                         type: 'success',
@@ -52,8 +52,6 @@ angular.module('PeerToPeerApp')
                     };
                     deferred.resolve(result);
                 }).catch(function (res) {
-                    console.log('errrr');
-                    console.log(res);
                     var result = {
                         type: 'error',
                         msg: res.data.message

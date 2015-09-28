@@ -7,22 +7,30 @@ var mongoose = require('mongoose');
 var session = require('express-session');
 
 var mongoUri = 'mongodb://localhost/peertopeer';
-mongoose.connect(mongoUri);
+var env = process.env.NODE_ENV || 'development';
+
+if ('development' == env) {
+  mongoose.connect(mongoUri);
+}
+if ('production' == env) {
+  mongoose.connect(
+    'mongodb://heroku_s6j1k4pl:5kgmttkhgbu9b38pds0ue1hffq@ds051543.mongolab.com:51543/heroku_s6j1k4pl'
+  );
+}
 var db = mongoose.connection;
 
-db.on('error', function(){
-    throw new Error('unable to connect to database at ' + mongoUri);
+db.on('error', function() {
+  throw new Error('unable to connect to database at ' + mongoUri);
 });
-
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-io.on('connection', function(socket){
-    console.log('a user connected');
-    socket.on('disconnect', function(){
-        console.log('user disconnected');
-    });
+io.on('connection', function(socket) {
+  console.log('a user connected');
+  socket.on('disconnect', function() {
+    console.log('user disconnected');
+  });
 });
 app.set('io', io);
 app.set('port', process.env.PORT || 3003);
@@ -31,33 +39,33 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(session({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false
 }));
 app.use(express.static(path.join(__dirname, 'client')));
 app.use(function(req, res, next) {
-    if (req.user) {
+  if (req.user) {
 
-        //prevents sending user's password to client
-        var userPayload = {
-            email: req.user.email,
-            _id: req.user._id,
-            cashBalance: req.user.cashBalance,
-            messages: req.user.messages,   // any messages the user had of they were offline
-            online: true
-        };
-        console.log(userPayload)
-        res.cookie('user', JSON.stringify(userPayload));
-    }
-    next();
+    //prevents sending user's password to client
+    var userPayload = {
+      email: req.user.email,
+      _id: req.user._id,
+      cashBalance: req.user.cashBalance,
+      messages: req.user.messages, // any messages the user had of they were offline
+      online: true
+    };
+    console.log(userPayload)
+    res.cookie('user', JSON.stringify(userPayload));
+  }
+  next();
 });
 
 require('./server/models/user.model');
 var router = require('./server/resources')(app);
 
 http.listen(app.get('port'), function() {
-    console.log('Express server listening on port ' + app.get('port'));
+  console.log('Express server listening on port ' + app.get('port'));
 });
 
 module.exports = app;

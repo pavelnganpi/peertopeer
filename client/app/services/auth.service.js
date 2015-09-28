@@ -1,11 +1,11 @@
 angular.module('PeerToPeerApp')
-    .factory('Auth', ['$http', '$location', '$rootScope', '$cookies', 'HttpService', 'TRANSACTION_CONSTANTS', 'notificationService',
-        function ($http, $location, $rootScope, $cookies, HttpService, TRANSACTION_CONSTANTS, notificationService) {
+    .factory('Auth', ['$http', '$location', '$rootScope', '$cookies', 'HttpService', 'AUTH_CONSTANTS', 'notificationService',
+        function ($http, $location, $rootScope, $cookies, HttpService, AUTH_CONSTANTS, notificationService) {
             $rootScope.currentUser = $cookies.get('user') ? JSON.parse($cookies.get('user')) : $cookies.get('user');
 
             return {
                 login: function (user) {
-                    return HttpService.post(TRANSACTION_CONSTANTS.URIS.LOGIN_BASE, user)
+                    return HttpService.post(AUTH_CONSTANTS.URIS.LOGIN_BASE, user)
                         .success(function (data) {
                             $rootScope.currentUser = data;
                             $location.path('/');
@@ -26,7 +26,7 @@ angular.module('PeerToPeerApp')
                         });
                 },
                 signup: function (user) {
-                    return HttpService.post(TRANSACTION_CONSTANTS.URIS.SIGNUP_BASE, user)
+                    return HttpService.post(AUTH_CONSTANTS.URIS.SIGNUP_BASE, user)
                         .success(function () {
                             $location.path('/login');
 
@@ -45,7 +45,7 @@ angular.module('PeerToPeerApp')
                         });
                 },
                 logout: function () {
-                    return HttpService.post(TRANSACTION_CONSTANTS.URIS.LOGOUT_BASE, $rootScope.currentUser)
+                    return HttpService.post(AUTH_CONSTANTS.URIS.LOGOUT_BASE, $rootScope.currentUser)
                         .success(function () {
                             $rootScope.currentUser = null;
                             $cookies.remove('user');

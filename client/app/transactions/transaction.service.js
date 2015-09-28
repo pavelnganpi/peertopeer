@@ -6,10 +6,11 @@ angular.module('PeerToPeerApp')
             {title: 'Requested Transactions', id: 'requestedTransactions'},
             {title: 'Received Transactions', id: 'receivedTransactions'}
         ];
+
         this.getTransactions = function (userId) {
 
             var deferred = $q.defer();
-            HttpService.get('/transactions/' + userId)
+            HttpService.get(TRANSACTION_CONSTANTS.URIS.TRANSACTIONS + userId)
                 .success(function (result) {
                     deferred.resolve(result);
                 })
@@ -32,7 +33,7 @@ angular.module('PeerToPeerApp')
             };
             var deferred = $q.defer();
 
-            HttpService.post('/transactions/update', message)
+            HttpService.post(TRANSACTION_CONSTANTS.URIS.TRANSACTIONS_UPDATE, message)
                 .success(function () {
                     var result = {
                         type: 'success',

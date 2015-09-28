@@ -1,4 +1,4 @@
-angular.module('PeerToPeerApp', ['ngResource', 'ngRoute', 'ui.router', 'ngCookies','ui.bootstrap', 'ngMessages','jlareau.pnotify'])
+angular.module('PeerToPeerApp', ['ngResource', 'ui.router', 'ngCookies','ui.bootstrap','jlareau.pnotify'])
     .config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
         $locationProvider.html5Mode(true);
         $stateProvider

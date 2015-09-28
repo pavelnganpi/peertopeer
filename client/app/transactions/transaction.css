@@ -1,7 +1,17 @@
-body > div > div > div > div > div.tab-pane.ng-scope.active > div > ng-include > div > div {
-    background: transparent;
-    margin-top: 2px;
-}
+
 td {
     color: #727272;
+}
+
+p{
+    text-align: center;
+}
+
+.main {
+    padding-top: 70px;
+}
+
+body > div > div > div > div > div > div.tab-pane.ng-scope.active > div > ng-include > div > div{
+    background: transparent;
+    margin-top: 2px;
 }

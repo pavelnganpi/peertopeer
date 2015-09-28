@@ -1,5 +1,5 @@
 angular.module('PeerToPeerApp')
-    .constant('TRANSACTION_CONSTANTS', {
+    .constant('AUTH_CONSTANTS', {
         'URIS': {
             'LOGIN_BASE': '/auth/login',
             'SIGNUP_BASE': '/auth/signup',

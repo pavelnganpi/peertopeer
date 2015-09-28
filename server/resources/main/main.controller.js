@@ -20,6 +20,9 @@ module.exports = function () {
                     }
                     else {
                         user.cashBalance -= payload.cashAmount;
+                        user.sentTransactions.receivers.push(payload.receiverEmail);
+                        user.sentTransactions.cashAmount.push(payload.cashAmount);
+                        user.sentTransactions.createdAt.push(new Date());
 
                         user.save(function (err) {
                             if (err) {
@@ -50,6 +53,12 @@ module.exports = function () {
                     }
 
                     user.cashBalance += payload.cashAmount;
+                    user.receivedTransactions.senders.push(payload.senderEmail);
+                    user.receivedTransactions.cashAmount.push(payload.cashAmount);
+                    user.receivedTransactions.createdAt.push(new Date());
+                    user.receivedTransactions.status.push("Accepted");  //status of a sent money is default to Accepted
+                    user.receivedTransactions.transactionType.push("Send Money");
+                    user.receivedTransactions.index.push(user.receivedTransactions.transactionType.length - 1);
                     user.save(function (err) {
                         if (err) {
                             res.status(500).send({'message': constants.HTTP_STATUS.MSG_500});
@@ -65,31 +74,61 @@ module.exports = function () {
             var io = req.app.get('io');
             var payload = req.body;
 
+            //updates requestedTransactions for the sender
+            var updateSenderTransaction = function (res) {
+                Users.findOne({'email': payload.senderEmail}, function (err, user) {
+
+                    if (err || !user) {
+                        res.status(404).send({'message': payload.receiverEmail + constants.HTTP_STATUS.MSG_404});
+                    }
+                    else {
+                        user.requestedTransactions.receivers.push(payload.receiverEmail);
+                        user.requestedTransactions.cashAmount.push(payload.cashAmount);
+                        user.requestedTransactions.createdAt.push(new Date());
+
+                        user.save(function (err) {
+                            if (err) {
+                                res.status(500).send({'message': constants.HTTP_STATUS.MSG_500});
+                            }
+                        });
+                    }
+
+                });
+            };
+
             Users.findOne({'email': payload.receiverEmail}, function (err, user) {
 
                 if (err || !user) {
-                    res.status(404).send( {'message': payload.receiverEmail + constants.HTTP_STATUS.MSG_404})
+                    res.status(404).send({'message': payload.receiverEmail + constants.HTTP_STATUS.MSG_404})
                 }
                 else {
                     var online = user.online;
                     if (online) {
                         io.emit('requestMoney:sent', payload);
-                        res.status(201).send({'message':constants.HTTP_STATUS.MSG_201});
                     }
                     else { //else store a message
-                        var message =  payload.senderEmail + ' has requested ' + payload.cashAmount + '$. you can accept or decline in transactions';
+                        var message = payload.senderEmail + ' has requested ' + payload.cashAmount + '$. you can accept or decline in transactions';
                         user.messages.push(message);
-                        user.save(function (err) {
-                            if (err) {
-                                console.log('error is ');
-                                console.log(err);
-                                res.status(500).send({'message': constants.HTTP_STATUS.MSG_500});
-                            }
-                            res.status(201).send({'message': constants.HTTP_STATUS.MSG_201});
-
-                        });
                     }
                 }
+
+                //updates receivedTransactions for the receiver
+                user.receivedTransactions.senders.push(payload.senderEmail);
+                user.receivedTransactions.cashAmount.push(payload.cashAmount);
+                user.receivedTransactions.createdAt.push(new Date());
+                user.receivedTransactions.status.push("noresponse");  //status of a request money is default to noresponse. will be switched to Accepted or Declined when the receiver response
+                user.receivedTransactions.transactionType.push("Request Money");
+                user.receivedTransactions.index.push(user.receivedTransactions.transactionType.length - 1);
+                updateSenderTransaction(res);
+                user.save(function (err) {
+                    if (err) {
+                        console.log('error is ');
+                        console.log(err);
+                        res.status(500).send({'message': constants.HTTP_STATUS.MSG_500});
+                    }
+                    res.status(201).send({'message': constants.HTTP_STATUS.MSG_201});
+
+                });
 
             });
 

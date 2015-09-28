@@ -1,0 +1,43 @@
+<div class="tab-content">
+    <br>
+    <div class="jumbotron">
+
+        <h2>Current Transactions.</h2>
+
+        <p>You currently have
+            <span class="badge">{{receivedTransactions.length}}</span>
+            <span ng-if="(receivedTransactions.length <= 1)"> received transaction</span>
+            <span ng-if="(receivedTransactions.length > 1)"> received transactions</span>
+        </p>
+
+        <div ng-show="receivedTransactions.length > 0">
+            <table class="table" width="100%">
+                <tr>
+                    <th>Sender</th>
+                    <th>Receiver</th>
+                    <th>Cash Amount</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                </tr>
+                <tr ng-repeat="receivedTransaction in receivedTransactions" class="appRows">
+                    <div ng-repeat="tab in tabs">
+                        <td><strong>{{receivedTransaction.sender}}</strong></a></td>
+                        <td><strong>{{currentUser.email}}</strong></td>
+                        <td><strong>{{receivedTransaction.cashAmount}}</strong></td>
+                        <td><strong>{{receivedTransaction.createdAt}}</strong></td>
+                        <td><strong>{{receivedTransaction.type}}</strong></td>
+                        <td ng-if="(receivedTransaction.status == 'Accepted')"><span class="label label-primary">Accepted</span></td>
+                        <td ng-if="(receivedTransaction.status == 'Declined')"><span class="label label-info">Declined</span>
+                            <a class="btn btn-xs btn-success" ng-click="AcceptMoneyRequest(receivedTransaction)">Accept</a>
+                        <td ng-if="(receivedTransaction.status == 'noresponse')">
+                            <a class="btn btn-xs btn-success" ng-click="AcceptMoneyRequest(receivedTransaction)">Accept</a>
+                            <a class="btn btn-xs btn-danger" ng-click="DeclineMoneyRequest(receivedTransaction)">Decline</a>
+                    </td>
+                        <!--<td><strong>{{receivedTransaction.status}}</strong></td>-->
+                    </div>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

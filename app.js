@@ -38,7 +38,17 @@ app.use(session({
 app.use(express.static(path.join(__dirname, 'client')));
 app.use(function(req, res, next) {
     if (req.user) {
-        res.cookie('user', JSON.stringify(req.user));
+
+        //prevents sending user's password to client
+        var userPayload = {
+            email: req.user.email,
+            _id: req.user._id,
+            cashBalance: req.user.cashBalance,
+            messages: req.user.messages,   // any messages the user had of they were offline
+            online: true
+        };
+        console.log(userPayload)
+        res.cookie('user', JSON.stringify(userPayload));
     }
     next();
 });

@@ -8,7 +8,25 @@ var UserSchema = new Schema({
     password: String,
     cashBalance: Number,
     online: Boolean,
-    messages: [String] // stores notifications messages if user is offline
+    messages: [String], // stores notifications messages if user is offline
+    sentTransactions: {        //transactions user sent money out
+        receivers:[String],
+        cashAmount:[Number],
+        createdAt: [Date]
+    },
+    requestedTransactions: {     //transactions user requested for money
+        receivers:[String],
+        cashAmount:[Number],
+        createdAt: [Date]
+    },
+    receivedTransactions: {   // transactions user received as money requests or money received
+        senders:[String],
+        cashAmount:[Number],
+        createdAt: [Date],
+        transactionType: [String],
+        status: [String],
+        index: [Number]  //to be able to update a status
+    }
 });
 
 UserSchema.pre('save', function(next) {

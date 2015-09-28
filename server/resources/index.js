@@ -12,7 +12,7 @@ module.exports = function (app) {
     app.use('/main', require('./main'));
     app.use('/auth', require('./auth')(app));
 
-    //app.use('/transactions', require('./transactions'));
+    app.use('/transactions', require('./transactions'));
 
     // All other routes should redirect to the index.html
     app.get('*', function(req, res) {

@@ -21,8 +21,6 @@ angular.module('PeerToPeerApp')
                 transactionType: transactionType
             };
 
-            console.log('payload in service is');
-            console.log(payload);
             HttpService.post(MAIN_CONSTANTS.URIS.SEND_MONEY_BASE, payload)
                 .success(function () {
                     var result = {

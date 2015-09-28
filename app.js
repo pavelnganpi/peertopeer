@@ -7,7 +7,14 @@ var mongoose = require('mongoose');
 var session = require('express-session');
 
 var mongoUri = 'mongodb://localhost/peertopeer';
-mongoose.connect(mongoUri);
+var env = process.env.NODE_ENV || 'development';
+
+if ('development' == env) {
+    mongoose.connect(mongoUri);
+}
+if('production' == env){
+    mongoose.connect('mongodb://heroku_s6j1k4pl:5kgmttkhgbu9b38pds0ue1hffq@ds051543.mongolab.com:51543/heroku_s6j1k4pl');
+}
 var db = mongoose.connection;
 
 db.on('error', function(){

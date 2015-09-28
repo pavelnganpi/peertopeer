@@ -4,7 +4,6 @@ angular.module('PeerToPeerApp')
     .controller('MainCtrl', function ($scope, MainService, $location, $cookies, Socket, notificationService) {
 
         $scope.init = function () {
-            console.log('init called');
             if (!$scope.currentUser) {
                 $location.path('/login');
             }
@@ -21,7 +20,6 @@ angular.module('PeerToPeerApp')
                             });
 
                         //}, 5000);
-                        console.log(message);
                     }
                 }
 
@@ -52,7 +50,8 @@ angular.module('PeerToPeerApp')
             }
             else {
 
-                MainService.sendMoney(user.email, $scope.currentUser.email, user.cashAmount)
+                var transactionType = 'Send Money';
+                MainService.sendMoney(user.email, $scope.currentUser.email, user.cashAmount, transactionType)
                     .then(
                     function success(result) {
                         notificationService.notify({
@@ -92,21 +91,38 @@ angular.module('PeerToPeerApp')
 
         };
 
-        Socket.on('send:money', function (data) {
+        Socket.on('requestMoney:response', function(message){
 
-            //shows notifications only on receiver's desktop
-            if (data.receiverEmail === $scope.currentUser.email) {
+            if (message.requesterEmail === $scope.currentUser.email) {
                 notificationService.notify({
-                        title: 'Money Received',
-                        text: 'You have received ' + data.cashAmount
-                        + '$ from ' + data.senderEmail,
-                        icon: 'glyphicon glyphicon-envelope'
+                    title: 'Update',
+                    text: message.receiverEmail + ' ' + message.responseType + ' your request for ' + message.cashAmount + '$ which you submitted on ' + message.date,
+                    icon: 'glyphicon glyphicon-envelope'
                 });
             }
             $scope.init();
-            //console.log(data);
         });
 
+        Socket.on('send:money', function (message) {
+
+            //shows notifications only on receiver's desktop
+            if ((message.receiverEmail === $scope.currentUser.email)) {
+                var description;
+                if(message.transactionType === 'Send Money'){
+                    description = 'You have received ' + message.cashAmount
+                        + '$ from ' + message.senderEmail;
+                }
+                else{
+                    description = message.senderEmail + ' accepted your money request of ' + message.cashAmount + '$. Your account was credited';
+                }
+                notificationService.notify({
+                    title: 'Money Received',
+                    text: description,
+                    icon: 'glyphicon glyphicon-envelope'
+                });
+            }
+            $scope.init();
+        });
 
         Socket.on('requestMoney:sent', function (data) {
 
@@ -116,26 +132,10 @@ angular.module('PeerToPeerApp')
                     title: 'Money Request',
                     text: data.senderEmail + ' has requested ' + data.cashAmount + '$. you can accept to decline in transactions',
                     icon: 'glyphicon glyphicon-envelope',
-                    hide: false,
-                    confirm: {
-                        confirm: true
-                    },
-                    buttons: {
-                        closer: false,
-                        sticker: false
-                    },
-                    history: {
-                        history: false
-                    }
-                }).get().on('pnotify.confirm', function() {
-                    alert('Ok, cool.');
-                }).on('pnotify.cancel', function() {
-                    alert('Oh ok. Chicken, I see.');
                 });
 
             }
             $scope.init();
-            //console.log(data);
         });
 
         $scope.init();

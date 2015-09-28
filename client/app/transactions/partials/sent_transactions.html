@@ -1,0 +1,32 @@
+<div class="tab-content">
+    <br>
+    <div class="jumbotron">
+
+        <h2>Current Transactions.</h2>
+
+        <p>You currently have
+            <span class="badge">{{sentTransactions.length}}</span>
+            <span ng-if="(sentTransactions.length <= 1)"> sent transaction</span>
+            <span ng-if="(sentTransactions.length > 1)"> sent transactions</span>
+        </p>
+
+        <div ng-show="sentTransactions.length > 0">
+            <table class="table" width="100%">
+                <tr>
+                    <th>Sender</th>
+                    <th>Receiver</th>
+                    <th>Cash Amount</th>
+                    <th>Date</th>
+                </tr>
+                <tr ng-repeat="sentTransaction in sentTransactions" class="appRows">
+                    <div ng-repeat="tab in tabs">
+                        <td><strong>{{currentUser.email}}</strong></a></td>
+                        <td><strong>{{sentTransaction.receiver}}</strong></td>
+                        <td><strong>{{sentTransaction.cashAmount}}</strong></td>
+                        <td><strong>{{sentTransaction.createdAt}}</strong></td>
+                    </div>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

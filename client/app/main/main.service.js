@@ -12,13 +12,17 @@ angular.module('PeerToPeerApp')
             return deferred.promise;
         };
 
-        this.sendMoney = function (receiverEmail, senderEmail, cashAmount) {
+        this.sendMoney = function (receiverEmail, senderEmail, cashAmount, transactionType) {
             var deferred = $q.defer();
             var payload = {
                 receiverEmail : receiverEmail,
                 senderEmail: senderEmail,
-                cashAmount: cashAmount
+                cashAmount: cashAmount,
+                transactionType: transactionType
             };
+
+            console.log('payload in service is');
+            console.log(payload);
             HttpService.post(MAIN_CONSTANTS.URIS.SEND_MONEY_BASE, payload)
                 .success(function () {
                     var result = {

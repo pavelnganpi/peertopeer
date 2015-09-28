@@ -1,4 +1,4 @@
-angular.module('PeerToPeerApp', ['ngResource', 'ngRoute', 'ui.router', 'ngCookies', 'ngMessages','jlareau.pnotify'])
+angular.module('PeerToPeerApp', ['ngResource', 'ngRoute', 'ui.router', 'ngCookies','ui.bootstrap', 'ngMessages','jlareau.pnotify'])
     .config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
         $locationProvider.html5Mode(true);
         $stateProvider
@@ -21,7 +21,7 @@ angular.module('PeerToPeerApp', ['ngResource', 'ngRoute', 'ui.router', 'ngCookie
                 url: '/signup',
                 templateUrl: 'app/signup/signup.html',
                 controller: 'SignupCtrl'
-            })
+            });
 
         $urlRouterProvider.otherwise("/");
     });

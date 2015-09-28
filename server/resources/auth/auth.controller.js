@@ -6,10 +6,9 @@ module.exports = function () {
     return {
 
         login: function (req, res) {
-            res.cookie('user', JSON.stringify(req.user));
             Users.findOne({'email': req.user.email}, function (err, user) {
-                if (err) {
-                    console.log(err)
+                if (err || !user) {
+                    res.status(404).send({'message': constants.HTTP_STATUS.MSG_404})
                 }
 
                 user.online = true;  //update users status to online
@@ -21,10 +20,11 @@ module.exports = function () {
                     online: true
                 };
 
+                res.cookie('user', JSON.stringify(userPayload));
                 user.messages = user.messages.splice(); // delete messages if any.
                 user.save(function (err) {
                     if (err) {
-                        console.log(err);
+                        res.status(500).send({'message': constants.HTTP_STATUS.MSG_500});
                     }
                     res.status(201).send(userPayload);
                 });
